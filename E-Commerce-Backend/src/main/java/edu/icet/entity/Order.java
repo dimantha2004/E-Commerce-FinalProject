@@ -1,5 +1,6 @@
 package edu.icet.entity;
 
+import edu.icet.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -22,7 +23,5 @@ public class Order {
 
     @Column(name = "created_at")
     private final LocalDateTime createdAt=LocalDateTime.now();
-
-
 
 }

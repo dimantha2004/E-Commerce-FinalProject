@@ -2,7 +2,9 @@ package edu.icet.controller;
 
 import edu.icet.dto.OrderRequest;
 import edu.icet.dto.Response;
+import edu.icet.entity.Order;
 import edu.icet.enums.OrderStatus;
+import edu.icet.exception.NotFoundException;
 import edu.icet.service.interfaces.OrderItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -50,10 +52,8 @@ public class OrderItemController {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
         OrderStatus orderStatus = status != null ? OrderStatus.valueOf(status.toUpperCase()) : null;
 
-        // Fetch order items
         Response response = orderItemService.filterOrderItems(orderStatus, startDate, endDate, itemId, pageable);
 
-        // Ensure the response contains the required data
         return ResponseEntity.ok(response);
     }
 }
