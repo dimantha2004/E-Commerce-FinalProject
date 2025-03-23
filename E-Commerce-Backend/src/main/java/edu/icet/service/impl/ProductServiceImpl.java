@@ -37,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public Response createProduct(Long categoryId, MultipartFile image, String name, String description, BigDecimal price) {
+    public Response createProduct(Long categoryId, MultipartFile image, String name, String description, BigDecimal price,Integer quantity) {
         Category category = categoryRepo.findById(categoryId).orElseThrow(()-> new NotFoundException("Category not found"));
         String productImageUrl = awsS3Service.saveImageToS3(image);
 
@@ -47,6 +47,7 @@ public class ProductServiceImpl implements ProductService {
         product.setName(name);
         product.setDescription(description);
         product.setImageUrl(productImageUrl);
+        product.setQuantity(quantity);
 
         productRepo.save(product);
         return Response.builder()
@@ -56,16 +57,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Response updateProduct(Long productId, Long categoryId, MultipartFile image, String name, String description, BigDecimal price) {
+    public Response updateProduct(Long productId, Long categoryId, MultipartFile image, String name, String description, BigDecimal price, Integer quantity) {
         Product product = productRepo.findById(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
 
         Category category = null;
         String productImageUrl = null;
 
-        if(categoryId != null ){
+        if(categoryId != null) {
             category = categoryRepo.findById(categoryId).orElseThrow(()-> new NotFoundException("Category not found"));
         }
-        if (image != null && !image.isEmpty()){
+        if (image != null && !image.isEmpty()) {
             productImageUrl = awsS3Service.saveImageToS3(image);
         }
 
@@ -74,15 +75,14 @@ public class ProductServiceImpl implements ProductService {
         if (price != null) product.setPrice(price);
         if (description != null) product.setDescription(description);
         if (productImageUrl != null) product.setImageUrl(productImageUrl);
+        if (quantity != null) product.setQuantity(quantity); // Add this line to update quantity
 
         productRepo.save(product);
         return Response.builder()
                 .status(200)
                 .message("Product updated successfully")
                 .build();
-
     }
-
 
     @Transactional
     public Response deleteProduct(Long productId) {

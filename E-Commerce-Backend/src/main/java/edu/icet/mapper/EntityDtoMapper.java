@@ -20,7 +20,6 @@ public class EntityDtoMapper {
 
     }
 
-    //Address to DTO Basic
     public AddressDto mapAddressToDtoBasic(Address address){
         AddressDto addressDto = new AddressDto();
         addressDto.setId(address.getId());
@@ -32,7 +31,6 @@ public class EntityDtoMapper {
         return addressDto;
     }
 
-    //Category to DTO basic
     public CategoryDto mapCategoryToDtoBasic(Category category){
         CategoryDto categoryDto = new CategoryDto();
         categoryDto.setId(category.getId());
@@ -41,7 +39,6 @@ public class EntityDtoMapper {
     }
 
 
-    //OrderItem to DTO Basics
     public OrderItemDto mapOrderItemToDtoBasic(OrderItem orderItem){
         OrderItemDto orderItemDto = new OrderItemDto();
         orderItemDto.setId(orderItem.getId());
@@ -52,7 +49,6 @@ public class EntityDtoMapper {
         return orderItemDto;
     }
 
-    //Product to DTO Basic
     public ProductDto mapProductToDtoBasic(Product product){
         ProductDto productDto = new ProductDto();
         productDto.setId(product.getId());
@@ -60,6 +56,7 @@ public class EntityDtoMapper {
         productDto.setDescription(product.getDescription());
         productDto.setPrice(product.getPrice());
         productDto.setImageUrl(product.getImageUrl());
+        productDto.setQuantity(product.getQuantity());
         return productDto;
     }
 
@@ -85,14 +82,12 @@ public class EntityDtoMapper {
             orderItemDto.setProduct(productDto);
         }
 
-        // Explicitly set user to null or exclude it
-        orderItemDto.setUser(null); // Break the circular reference
+        orderItemDto.setUser(null);
 
         return orderItemDto;
     }
 
 
-    //OrderItem to DTO plus product and user
     public OrderItemDto mapOrderItemToDtoPlusProductAndUser(OrderItem orderItem){
         OrderItemDto orderItemDto = mapOrderItemToDtoPlusProduct(orderItem);
 
@@ -103,8 +98,6 @@ public class EntityDtoMapper {
         return orderItemDto;
     }
 
-
-    //USer to DTO with Address and Order Items History
     public UserDto mapUserToDtoPlusAddressAndOrderHistory(User user) {
         UserDto userDto = mapUserToDtoPlusAddress(user);
 

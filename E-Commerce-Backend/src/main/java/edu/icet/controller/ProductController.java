@@ -3,6 +3,7 @@ package edu.icet.controller;
 import edu.icet.dto.Response;
 import edu.icet.exception.InvalidCredentialsException;
 import edu.icet.service.interfaces.ProductService;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,13 +28,20 @@ public class ProductController {
             @RequestParam("image") MultipartFile image,
             @RequestParam("name") String name,
             @RequestParam("description") String description,
-            @RequestParam("price") BigDecimal price
+            @RequestParam("price") BigDecimal price,
+            @RequestParam("quantity") @Min(0) Integer quantity
     ) {
         if (categoryId == null || image.isEmpty() || name.isEmpty() || description.isEmpty() || price == null) {
             throw new InvalidCredentialsException("All Fields are Required");
         }
-        return ResponseEntity.ok(productService.createProduct(categoryId, image, name, description, price));
+
+        if (quantity < 0) {
+            throw new InvalidCredentialsException("Quantity cannot be negative");
+        }
+        return ResponseEntity.ok(productService.createProduct(categoryId, image, name, description, price, quantity));
     }
+
+
 
     @PutMapping(value = "/update/{productId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -43,7 +51,8 @@ public class ProductController {
             @RequestParam(required = false) MultipartFile image,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String description,
-            @RequestParam(required = false) BigDecimal price
+            @RequestParam(required = false) BigDecimal price,
+            @RequestParam(required = false) Integer quantity
     ) {
         return ResponseEntity.ok(productService.updateProduct(
                 productId,
@@ -51,7 +60,8 @@ public class ProductController {
                 image,
                 name,
                 description,
-                price
+                price,
+                quantity
         ));
     }
 
